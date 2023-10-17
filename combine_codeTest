@@ -46,8 +46,8 @@ if __name__ == "__main__":
 		loop()
 	except KeyboardInterrupt:
 		destroy()
-distancePerObject = 0;
-if distancePerObject >=2:
+
+if distance >= 2cm:
 #!/usr/bin/env python3
 #---------------------------------------------------
 #
