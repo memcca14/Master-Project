@@ -62,9 +62,6 @@ if distancePerObject >=2:
 #
 #---------------------------------------------------
 
-import RPi.GPIO as GPIO
-import time
-
 Buzzer = 11
 
 CL = [0, 131, 147, 165, 175, 196, 211, 248]		# Frequency of Low C notes
