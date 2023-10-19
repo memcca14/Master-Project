@@ -84,8 +84,4 @@ def destroy():
 if __name__ == '__main__':        # Program starts here
     setup()
     try:
-        while True:
-            loop()
-            time.sleep(2)  # Wait for 2 seconds before repeating
-    except KeyboardInterrupt:    # When 'Ctrl+C' is pressed, the child program destroy() will be executed.
-        destroy()
+        while True
