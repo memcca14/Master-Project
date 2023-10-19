@@ -5,13 +5,13 @@ import time
 
 TRIG = 11
 ECHO = 12
-BUZZER_PIN = 16  # GPIO pin for the passive buzzer
+BUZZER_PIN = 16  # Replace with the actual GPIO pin number you are using for the buzzer
 
 def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(TRIG, GPIO.OUT)
     GPIO.setup(ECHO, GPIO.IN)
-    GPIO.setup(BUZZER_PIN, GPIO.OUT)  # Set buzzer pin as an output
+    GPIO.setup(BUZZER_PIN, GPIO.OUT)  # Set the buzzer pin as an output
 
 def distance():
     GPIO.output(TRIG, 0)
@@ -32,15 +32,19 @@ def distance():
     return during * 340 / 2 * 100
 
 def activate_buzzer():
-    GPIO.output(BUZZER_PIN, GPIO.HIGH)  # Turn on the passive buzzer
-    time.sleep(0.5)  # Sound the buzzer for 0.5 seconds
-    GPIO.output(BUZZER_PIN, GPIO.LOW)  # Turn off the passive buzzer
+    GPIO.output(BUZZER_PIN, GPIO.HIGH)  # Turn on the buzzer
+    time.sleep(2)  # Buzz for 1 second
+    GPIO.output(BUZZER_PIN, GPIO.LOW)  # Turn off the buzzer
 
 def loop():
     while True:
         dis = distance()
-        if dis <= 1000:
-            activate_buzzer()  # Activate the passive buzzer
+        print(dis, 'cm')
+        
+        if dis < 1000:
+            activate_buzzer()
+            print("Buzzer activated!")
+        
         time.sleep(0.3)
 
 def destroy():
