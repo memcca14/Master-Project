@@ -7,9 +7,9 @@ Buzzer = 11  # Pin for the buzzer
 TRIG = 11    # Pin for the ultrasonic sensor trigger
 ECHO = 12    # Pin for the ultrasonic sensor echo
 
-CL = [0, 131, 147, 165, 175, 196, 211, 248]     # Frequency of Low C notes
-CM = [0, 262, 294, 330, 350, 393, 441, 495]     # Frequency of Middle C notes
-CH = [0, 525, 589, 661, 700, 786, 882, 990]     # Frequency of High C notes
+CL = [0, 131, 147, 165, 175, 196, 211, 248]      # Frequency of Low C notes
+CM = [0, 262, 294, 330, 350, 393, 441, 495]      # Frequency of Middle C notes
+CH = [0, 525, 589, 661, 700, 786, 882, 990]      # Frequency of High C notes
 
 song_1 = [   CM[3], CM[5], CM[6], CM[3], CM[2], CM[3], CM[5], CM[6],  # Notes of song1
             CH[1], CM[6], CM[5], CM[1], CM[3], CM[2], CM[2], CM[3],
@@ -22,9 +22,22 @@ beat_1 = [   1, 1, 3, 1, 1, 3, 1, 1,         # Beats of song 1, 1 means 1/8 beat
             1, 2, 1, 1, 1, 1, 1, 1,
             1, 1, 3    ]
 
+song_2 = [   CM[1], CM[1], CM[1], CL[5], CM[3], CM[3], CM[3], CM[1], # Notes of song2
+            CM[1], CM[3], CM[5], CM[5], CM[4], CM[3], CM[2], CM[2],
+            CM[3], CM[4], CM[4], CM[3], CM[2], CM[3], CM[1], CM[1],
+            CM[3], CM[2], CL[5], CL[7], CM[2], CM[1]    ]
+
+beat_2 = [   1, 1, 2, 2, 1, 1, 2, 2,         # Beats of song 2, 1 means 1/8 beats
+            1, 1, 2, 2, 1, 1, 3, 1,
+            1, 2, 2, 1, 1, 2, 2, 1,
+            1, 2, 2, 1, 1, 3 ]
+
 def setup():
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(Buzzer, GPIO.OUT)
+    GPIO.setmode(GPIO.BOARD)        # Numbers GPIOs by physical location
+    GPIO.setup(Buzzer, GPIO.OUT)    # Set pins' mode is output
+    global Buzz                        # Assign a global variable to replace GPIO.PWM
+    Buzz = GPIO.PWM(Buzzer, 440)    # 440 is the initial frequency.
+    Buzz.start(50)                    # Start Buzzer pin with 50% duty ratio
     GPIO.setup(TRIG, GPIO.OUT)
     GPIO.setup(ECHO, GPIO.IN)
 
@@ -47,7 +60,7 @@ def distance():
     return during * 340 / 2 * 100
 
 def activate_buzzer():
-    # Play a simple song when the distance is less than 1000 cm
+    # Play a simple song when the distance is less than 5000 cm
     for i in range(1, len(song_1)):
         Buzz.ChangeFrequency(song_1[i])
         time.sleep(beat_1[i] * 0.5)
@@ -57,7 +70,7 @@ def loop():
         dis = distance()
         print(dis, 'cm')
 
-        if dis < 1000:
+        if dis < 5000:
             activate_buzzer()
             print("Buzzer activated!")
 
@@ -65,13 +78,12 @@ def loop():
 
 def destroy():
     Buzz.stop()
-    GPIO.output(Buzzer, 1)
+    GPIO.output(Buzzer, 1)        # Set Buzzer pin to High
     GPIO.cleanup()
 
-if __name__ == "__main__":
+if __name__ == '__main__':        # Program starts here
     setup()
-    Buzz = GPIO.PWM(Buzzer, 440)  # Initialize the buzzer
     try:
         loop()
-    except KeyboardInterrupt:
+    except KeyboardInterrupt:    # When 'Ctrl+C' is pressed, the child program destroy() will be executed.
         destroy()
