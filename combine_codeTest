@@ -3,15 +3,15 @@
 import RPi.GPIO as GPIO
 import time
 
-TRIG = 11
-ECHO = 12
-BUZZER_PIN = 16  # Replace with the actual GPIO pin number you are using for the buzzer
+Buzzer = 11  # Pin for the buzzer
+TRIG = 11    # Pin for the ultrasonic sensor trigger
+ECHO = 12    # Pin for the ultrasonic sensor echo
 
 def setup():
     GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(Buzzer, GPIO.OUT)
     GPIO.setup(TRIG, GPIO.OUT)
     GPIO.setup(ECHO, GPIO.IN)
-    GPIO.setup(BUZZER_PIN, GPIO.OUT)  # Set the buzzer pin as an output
 
 def distance():
     GPIO.output(TRIG, 0)
@@ -32,9 +32,15 @@ def distance():
     return during * 340 / 2 * 100
 
 def activate_buzzer():
-    GPIO.output(BUZZER_PIN, GPIO.HIGH)  # Turn on the buzzer
-    time.sleep(2)  # Buzz for 1 second
-    GPIO.output(BUZZER_PIN, GPIO.LOW)  # Turn off the buzzer
+    # Play a simple song when the distance is less than 1000 cm
+    # You can add your song here or use the song data from your previous code
+    # Example: song = [440, 523, 659, 784] for a simple melody
+    song = [440, 523, 659, 784]
+    beat = [0.5, 0.5, 0.5, 0.5]
+
+    for i in range(len(song)):
+        Buzz.ChangeFrequency(song[i])
+        time.sleep(beat[i])
 
 def loop():
     while True:
@@ -44,14 +50,17 @@ def loop():
         if dis < 1000:
             activate_buzzer()
             print("Buzzer activated!")
-        
+
         time.sleep(0.3)
 
 def destroy():
+    Buzz.stop()
+    GPIO.output(Buzzer, 1)
     GPIO.cleanup()
 
 if __name__ == "__main__":
     setup()
+    Buzz = GPIO.PWM(Buzzer, 440)  # Initialize the buzzer
     try:
         loop()
     except KeyboardInterrupt:
