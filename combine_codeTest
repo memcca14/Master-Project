@@ -34,9 +34,9 @@ beat_2 = [   1, 1, 2, 2, 1, 1, 2, 2,         # Beats of song 2, 1 means 1/8 beat
 
 def setup():
     GPIO.setmode(GPIO.BOARD)        # Numbers GPIOs by physical location
-    GPIO.setup(Buzzer, GPIO.OUT)    # Set pins' mode is output
+    GPIO.setup(Buzzer, GPIO.OUT)    # Set pins' mode as output
     global Buzz                        # Assign a global variable to replace GPIO.PWM
-    Buzz = GPIO.PWM(Buzzer, 440)    # 440 is the initial frequency.
+    Buzz = GPIO.PWM(Buzzer, 440)    # 440 is the initial frequency
     Buzz.start(50)                    # Start Buzzer pin with 50% duty ratio
     GPIO.setup(TRIG, GPIO.OUT)
     GPIO.setup(ECHO, GPIO.IN)
@@ -84,6 +84,8 @@ def destroy():
 if __name__ == '__main__':        # Program starts here
     setup()
     try:
-        loop()
+        while True:
+            loop()
+            time.sleep(2)  # Wait for 2 seconds before repeating
     except KeyboardInterrupt:    # When 'Ctrl+C' is pressed, the child program destroy() will be executed.
         destroy()
