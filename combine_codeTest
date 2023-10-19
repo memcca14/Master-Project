@@ -2,15 +2,16 @@
 
 import RPi.GPIO as GPIO
 import time
-import os
 
 TRIG = 11
 ECHO = 12
+BUZZER_PIN = 16  # GPIO pin for the passive buzzer
 
 def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(TRIG, GPIO.OUT)
     GPIO.setup(ECHO, GPIO.IN)
+    GPIO.setup(BUZZER_PIN, GPIO.OUT)  # Set buzzer pin as an output
 
 def distance():
     GPIO.output(TRIG, 0)
@@ -30,46 +31,17 @@ def distance():
     during = time2 - time1
     return during * 340 / 2 * 100
 
-def destroy():
-    GPIO.cleanup()
+def activate_buzzer():
+    GPIO.output(BUZZER_PIN, GPIO.HIGH)  # Turn on the passive buzzer
+    time.sleep(0.5)  # Sound the buzzer for 0.5 seconds
+    GPIO.output(BUZZER_PIN, GPIO.LOW)  # Turn off the passive buzzer
 
-if __name__ == "__main__":
-    setup()
-    try:
-        while True:
-            dis = distance()
-            print(dis, 'cm')
-            if dis <= 1000:  # If distance is less than or equal to 1000cm, trigger code 1.
-                os.system(
-import RPi.GPIO as GPIO
-import time
-import os
-
-TRIG = 11
-ECHO = 12
-
-def setup():
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(TRIG, GPIO.OUT)
-    GPIO.setup(ECHO, GPIO.IN)
-
-def distance():
-    GPIO.output(TRIG, 0)
-    time.sleep(0.000002)
-
-    GPIO.output(TRIG, 1)
-    time.sleep(0.00001)
-    GPIO.output(TRIG, 0)
-
-    while GPIO.input(ECHO) == 0:
-        pass
-    time1 = time.time()
-    while GPIO.input(ECHO) == 1:
-        pass
-    time2 = time.time()
-
-    during = time2 - time1
-    return during * 340 / 2 * 100
+def loop():
+    while True:
+        dis = distance()
+        if dis <= 1000:
+            activate_buzzer()  # Activate the passive buzzer
+        time.sleep(0.3)
 
 def destroy():
     GPIO.cleanup()
@@ -77,15 +49,6 @@ def destroy():
 if __name__ == "__main__":
     setup()
     try:
-        while True:
-            dis = distance()
-            print(dis, 'cm')
-            if dis <= 1000:  # If distance is less than or equal to 1000cm, trigger code 1.
-                os.system("python3 code1.py")  # Execute code 1 script.
-            time.sleep(0.3)
-    except KeyboardInterrupt:
-        destroy())  # Replace /path/to/code1.py with the actual path to code1.py.
-            time.sleep(0.3)
+        loop()
     except KeyboardInterrupt:
         destroy()
-
