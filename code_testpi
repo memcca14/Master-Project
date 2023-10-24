@@ -33,9 +33,11 @@ def loop():
     while True:
         dis = distance()
         print(dis, 'cm')
+        
+
         if dis < 50:
-        print ('')
-        time.sleep(0.3)
+            activate_buzzer()
+            print("Buzzer activated!")
 
 def destroy():
     GPIO.cleanup()
