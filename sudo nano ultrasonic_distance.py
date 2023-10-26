@@ -70,13 +70,13 @@ def destroy_distance():
 
 if __name__ == "__main__":
 	setup_distance_sensor()
- setup(Buzzer)
+        setup(Buzzer)
 	try:
 		loop_distance()
-  loop_buzzer()
+                loop_buzzer()
 	except KeyboardInterrupt:
 		destroy_distance()
-  destroy_buzzer()
+                destroy_buzzer()
 
 
 
