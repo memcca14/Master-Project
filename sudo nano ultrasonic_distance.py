@@ -1,53 +1,83 @@
-#Libraries
+#!/usr/bin/env python3
+
 import RPi.GPIO as GPIO
 import time
- 
-#GPIO Mode (BOARD / BCM)
-GPIO.setmode(GPIO.BCM)
- 
-#set GPIO Pins
-GPIO_TRIGGER = 18
-GPIO_ECHO = 24
- 
-#set GPIO direction (IN / OUT)
-GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-GPIO.setup(GPIO_ECHO, GPIO.IN)
- 
+
+TRIG = 11
+ECHO = 12
+Buzzer = 11
+
+def setup_distance_sensor():
+	GPIO.setmode(GPIO.BOARD)
+	GPIO.setup(TRIG, GPIO.OUT)
+	GPIO.setup(ECHO, GPIO.IN)
+
 def distance():
-    # set Trigger to HIGH
-    GPIO.output(GPIO_TRIGGER, True)
- 
-    # set Trigger after 0.01ms to LOW
-    time.sleep(0.00001)
-    GPIO.output(GPIO_TRIGGER, False)
- 
-    StartTime = time.time()
-    StopTime = time.time()
- 
-    # save StartTime
-    while GPIO.input(GPIO_ECHO) == 0:
-        StartTime = time.time()
- 
-    # save time of arrival
-    while GPIO.input(GPIO_ECHO) == 1:
-        StopTime = time.time()
- 
-    # time difference between start and arrival
-    TimeElapsed = StopTime - StartTime
-    # multiply with the sonic speed (34300 cm/s)
-    # and divide by 2, because there and back
-    distance = (TimeElapsed * 34300) / 2
- 
-    return distance
- 
-if __name__ == '__main__':
-    try:
-        while True:
-            dist = distance()
-            print ("Measured Distance = %.1f cm" % dist)
-            time.sleep(1)
- 
-        # Reset by pressing CTRL + C
-    except KeyboardInterrupt:
-        print("Measurement stopped by User")
-        GPIO.cleanup()
+	GPIO.output(TRIG, 0)
+	time.sleep(0.000002)
+
+	GPIO.output(TRIG, 1)
+	time.sleep(0.00001)
+	GPIO.output(TRIG, 0)
+
+ def setup_active_buzzer(pin):
+	global BuzzerPin
+	BuzzerPin = pin
+	GPIO.setmode(GPIO.BOARD)       # Numbers GPIOs by physical location
+	GPIO.setup(BuzzerPin, GPIO.OUT)
+	GPIO.output(BuzzerPin, GPIO.HIGH)
+	
+	while GPIO.input(ECHO) == 0:
+		a = 0
+	time1 = time.time()
+	while GPIO.input(ECHO) == 1:
+		a = 1
+	time2 = time.time()
+
+	during = time2 - time1
+	return during * 340 / 2 * 100
+
+def on_buzzer():
+	GPIO.output(BuzzerPin, GPIO.LOW)
+
+def off_buzzer():
+	GPIO.output(BuzzerPin, GPIO.HIGH)
+
+def beep_buzzer(x):
+	on()
+	time.sleep(x)
+	off()
+	time.sleep(x)
+
+def loop_buzzer():
+	while True:
+		beep(0.5)
+
+def destroy_buzzer():
+	GPIO.output(BuzzerPin, GPIO.HIGH)
+	GPIO.cleanup() 
+
+
+def loop_distance():
+	while True:
+		dis = distance()
+		print (dis, 'cm')
+		print ('')
+		time.sleep(0.3)
+
+def destroy_distance():
+	GPIO.cleanup()
+
+if __name__ == "__main__":
+	setup_distance_sensor()
+ setup(Buzzer)
+	try:
+		loop_distance()
+  loop_buzzer()
+	except KeyboardInterrupt:
+		destroy_distance()
+  destroy_buzzer()
+
+
+
+		
