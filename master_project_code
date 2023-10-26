@@ -36,7 +36,6 @@ def loop():
         
 
         if dis < 50:
-            activate_buzzer()
             print("Buzzer activated!")
 
 def destroy():
