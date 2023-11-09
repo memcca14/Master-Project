@@ -6,10 +6,15 @@
 #Attempt at running the code without monitor, keyboard, and mouse
 sudo nano /home/pi/.bashrc
 
+# Add your aliases for running scripts or commands
+alias myscript='sudo python /home/pi/Combination Attempt.py'
+
+# Check if the .bash_aliases file exists and load it
 if [ -f /home/pi/.bash_aliases ]; then
     . /home/pi/.bash_aliases
 fi
 
+# The rest of your .bashrc file, as you posted earlier
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         . /usr/share/bash-completion/bash_completion
@@ -21,7 +26,7 @@ fi
 xhost +
 
 echo "Running at boot"
-sudo python /home/pi/CombinationAttempt.py
+myscript
 
 sudo reboot
 
