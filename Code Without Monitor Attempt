@@ -5,25 +5,26 @@
 
 #Attempt at running the code without monitor, keyboard, and mouse
 sudo nano /home/pi/.bashrc
-if [ -f -/.bash_aliases ]: then
-    . -/.bash_aliases
+
+if [ -f /home/pi/.bash_aliases ]; then
+    . /home/pi/.bash_aliases
 fi
 
-
-if ! shopt -oq posix: then
-    if [ -f /usr/share/bash-completion/bash_completion ]: then
-    . /etc//usr/share/bash-completion/bash_completion
-elif [ -f /etc/bash_completion]: then
-. /etc/bash_completion
-
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
 fi
-fi
-xhost + 
 
-echo Running at boot 
-sudo python /home/pi/Combination Attempt.py
+xhost +
+
+echo "Running at boot"
+sudo python /home/pi/CombinationAttempt.py
 
 sudo reboot
+
 
 #imports
 import RPi.GPIO as GPIO
