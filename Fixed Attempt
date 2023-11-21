@@ -46,7 +46,13 @@ def ultrasonic_thread():
                 beep(0.11)
         time.sleep(1)
 
-# Your existing functions...
+def read_dht11_dat():
+	GPIO.setup(DHTPIN, GPIO.OUT)
+	GPIO.output(DHTPIN, GPIO.HIGH)
+	time.sleep(0.05)
+	GPIO.output(DHTPIN, GPIO.LOW)
+	time.sleep(0.02)
+	GPIO.setup(DHTPIN, GPIO.IN, GPIO.PUD_UP)
 
 if __name__ == '__main__':
     try:
