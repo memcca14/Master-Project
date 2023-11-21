@@ -166,28 +166,55 @@ def read_dht11_dat():
 	return the_bytes[0], the_bytes[2]
 	
 #Code Main
-def main():
-	print ("Raspberry Pi wiringPi DHT11 Temperature test program\n")
-	setupVibrator() #set up vibrator
-	setupBuzzer() #Set up Buzzer
-	while True:
-		result = read_dht11_dat()
-		if result:
-			humidity, temperature = result
-			print ("humidity: %s %%,  Temperature: %s C`" % (humidity, temperature))
-			if humidity > 60:
-				print ("water detected!")
-				vibrate(1.0)
-		dis = distance()	
-		print(dis, 'cm')
+import threading
+import time
 
-		if dis <= 60 and dis >= 30:
-			print("Buzzer activated!")
-			beep(1.0)  # You can adjust the beep duration as needed
-        
-		if dis < 30:
-			print("Buzzer activated!")
-			beep(0.11) 
+# Import your functions and setup here
+
+def main():
+    print("Raspberry Pi wiringPi DHT11 and Ultrasonic Sensor test program\n")
+    setupVibrator()  # set up vibrator
+    setupBuzzer()    # Set up Buzzer
+
+    def dht11_thread():
+        while True:
+            result = read_dht11_dat()
+            if result:
+                humidity, temperature = result
+                print("humidity: %s %%,  Temperature: %s C" % (humidity, temperature))
+                if humidity > 60:
+                    print("Water detected!")
+                    vibrate(1.0)
+            time.sleep(1)
+
+    def ultrasonic_thread():
+        while True:
+            dis = distance()
+            print(dis, 'cm')
+
+            if 30 <= dis <= 60:
+                print("Buzzer activated!")
+                beep(1.0)  # You can adjust the beep duration as needed
+
+            if dis < 30:
+                print("Buzzer activated!")
+                beep(0.11)
+            time.sleep(1)
+
+    # Create threads for each function
+    dht11_thread = threading.Thread(target=dht11_thread)
+    ultrasonic_thread = threading.Thread(target=ultrasonic_thread)
+
+    # Start the threads
+    dht11_thread.start()
+    ultrasonic_thread.start()
+
+    # Wait for the threads to finish (if needed)
+    dht11_thread.join()
+    ultrasonic_thread.join()
+
+if __name__ == "__main__":
+    main()
 
 def destroy():
 	Buzz.stop()
