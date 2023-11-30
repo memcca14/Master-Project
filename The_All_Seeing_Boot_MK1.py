@@ -2,7 +2,7 @@
 #ALL PARTS FUNCTION AND REACT TO INPUTS PROPERLY
 #HOWEVER, IT CAN LAG AND FAVOR ONE INPUT OVER THE OTHER.
 #IS THERE A WAY TO FIX SPEED ISSUE?
-
+# all code from SunFounder
 #imports
 import RPi.GPIO as GPIO
 import time
@@ -28,13 +28,13 @@ def vibrate(x):
     time.sleep(x)
 
 #Buzzer setup
-
+# function to activate the buzzer
 def setupBuzzer():
     GPIO.setup(TRIG, GPIO.OUT)
     GPIO.setup(ECHO, GPIO.IN)
     GPIO.setup(BuzzerPin, GPIO.OUT)
     GPIO.output(BuzzerPin, GPIO.HIGH)
-
+# function to read inputs from distance sensor 
 def distance():
     GPIO.output(TRIG, 0)
     time.sleep(0.02)
@@ -175,12 +175,13 @@ def main():
 		if result:
 			humidity, temperature = result
 			print ("humidity: %s %%,  Temperature: %s C`" % (humidity, temperature))
+# condition to check the humidity			
 			if humidity > 60:
 				print ("water detected!")
 				vibrate(1.0)
 		dis = distance()	
 		print(dis, 'cm')
-
+# condition to check if the distance is in certain range
 		if dis <= 60 and dis >= 30:
 			print("Buzzer activated!")
 			beep(1.0)  # You can adjust the beep duration as needed
